@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="/resources/css/main.css">
+    <script src="/resources/js/lib/angular/angular.js"></script>
+    <script src="/resources/js/lib/angular/angular-resource.js"></script>
+
+    <script src="/resources/app/app.js"></script>
+    <script src="/resources/app/services/statisticsService.js"></script>
+    <script src="/resources/app/controllers/statisticsController.js"></script>
+    <script src="/resources/app/directives/lowerCaseTransformation.js"></script>
+    <script src="/resources/app/filters/statisticsFilter.js"></script>
+</head>
+<body ng-app="statisticsApp">
+    <h1>Battle For Middle Earth Statistics</h1>
+
+    <div ng-controller="statisticsCtrl">
+        <h2>New Player</h2>
+        Playername:
+        <input ng-model="newPlayer"
+                make-lower-case>
+        <button ng-disabled="validateNewPlayer()"
+                ng-click="addNewPlayer()">
+            Add Player
+        </button>
+
+        <h2>New battle</h2>
+        <form>
+            Player1:
+            <select ng-model="newGame.player1"
+                    ng-options="player as (player | capitalize) for player in (playersFor1 | excludeValue:players:newGame.player2)"
+                    ng-click="validateNewGame()"
+                    make-lower-case>
+            </select><br>
+            Nation:
+            <select ng-model="newGame.nation1"
+                    ng-options="nation for nation in nations"
+                    ng-click="validateNewGame()">
+            </select><br>
+            Player2:
+            <select ng-model="newGame.player2"
+                    ng-options="player as (player | capitalize) for player in (playersFor2 | excludeValue:players:newGame.player1)"
+                    ng-click="validateNewGame()"
+                    make-lower-case>
+            </select><br>
+            Nation:
+            <select ng-model="newGame.nation2"
+                    ng-options="nation for nation in nations"
+                    ng-click="validateNewGame()">
+            </select><br>
+            Winner:
+            <select ng-model="newGame.winner"
+                    ng-options="winner as (winner | capitalize) for winner in playersInNewMatch()"
+                    ng-click="validateNewGame()"
+                    make-lower-case>
+            </select><br>
+            <button ng-disabled="validateNewGame()"
+                    ng-click="addNewGame()">
+                Submit
+            </button>
+        </form>
+
+        <h2>Results</h2>
+        <table>
+            <thead>
+                <td>Player1</td>
+                <td>Nation</td>
+                <td>Player2</td>
+                <td>Nation</td>
+                <td>Duration</td>
+            </thead>
+            <tr ng-repeat="battle in battles">
+                <td ng-class="isWinner(battle.player1, battle);">{{ battle.player1.name | capitalize}}</td>
+                <td ng-class="isWinner(battle.player1, battle);">{{ battle.player1.nation }}</td>
+                <td ng-class="isWinner(battle.player2, battle);">{{ battle.player2.name | capitalize}}</td>
+                <td ng-class="isWinner(battle.player2, battle);">{{ battle.player2.nation }}</td>
+                <td>{{ battle.duration }}</td>
+            </tr>
+        </table>
+
+    </div>
+</body>
+</html>
